@@ -11,8 +11,8 @@ for mnt in dev/pts dev sys proc; do
     mountpoint -q "$ROOTFS/$mnt" 2>/dev/null && sudo umount -lf "$ROOTFS/$mnt" || true
 done
 
-echo "==> Bootstrap Debian Bookworm..."
-sudo debootstrap --arch=amd64 bookworm "$ROOTFS" http://deb.debian.org/debian
+echo "==> Bootstrap Debian Trixie..."
+sudo debootstrap --arch=amd64 trixie "$ROOTFS" http://deb.debian.org/debian
 
 echo "==> Copiando configs..."
 sudo cp config/sources.list      "$ROOTFS/etc/apt/sources.list"

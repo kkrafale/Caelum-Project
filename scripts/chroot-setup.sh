@@ -71,6 +71,12 @@ OVERRIDE
 
 systemctl set-default graphical.target
 systemctl mask live-config.service || true
+# Garante sources.list correto no sistema live
+cat > /etc/apt/sources.list << 'EOF'
+deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
+deb http://security.debian.org/debian-security trixie-security main
+deb http://deb.debian.org/debian trixie-updates main
+EOF
 echo "==> Limpando..."
 apt-get clean
 apt-get autoremove -y
