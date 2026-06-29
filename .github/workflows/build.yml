@@ -29,5 +29,13 @@ jobs:
             jq \
             curl
 
-      - name: Build e Upload LakeOS
+      - name: Build LakeOS
         run: sudo bash scripts/build.sh
+
+      - name: Upload Gofile
+        run: |
+          RESPONSE=$(curl -s -F "file=@output/lakeOS.iso" "https://upload.gofile.io/uploadfile?folderId=j3q")
+          LINK=$(echo "$RESPONSE" | jq -r '.data.downloadPage')
+          echo "# LakeOS ISO Build #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Download:** $LINK" >> $GITHUB_STEP_SUMMARY

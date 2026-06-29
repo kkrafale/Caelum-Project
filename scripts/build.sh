@@ -6,13 +6,10 @@ ISO_ROOT="/opt/lake-iso"
 OUTPUT="$(pwd)/output"
 ISO_NAME="lakeOS.iso"
 
-# Limpa rootfs antigo se existir
-if mountpoint -q "$ROOTFS/proc" 2>/dev/null; then
-    sudo umount -lf "$ROOTFS/dev/pts" || true
-    sudo umount -lf "$ROOTFS/dev"     || true
-    sudo umount -lf "$ROOTFS/sys"     || true
-    sudo umount -lf "$ROOTFS/proc"    || true
-fi
+# Limpa mounts antigos se existirem
+for mnt in dev/pts dev sys proc; do
+    mountpoint -q "$ROOTFS/$mnt" 2>/dev/null && sudo umount -lf "$ROOTFS/$mnt" || true
+done
 
 echo "==> Bootstrap Debian Bookworm..."
 sudo debootstrap --arch=amd64 bookworm "$ROOTFS" http://deb.debian.org/debian
@@ -38,17 +35,17 @@ sudo umount "$ROOTFS/dev/pts" "$ROOTFS/dev" "$ROOTFS/sys" "$ROOTFS/proc"
 
 echo "==> Gerando squashfs..."
 mkdir -p "$OUTPUT"
-sudo mksquashfs "$ROOTFS" "$OUTPUT/filesystem.squashfs" -comp xz -noappend
+sudo mksquashfs "$ROOTFS" "$OUTPUT/filesystem.squashfs" -comp xz -noappend 2>&1 | grep -v "Unrecognised xattr" || true
 
 echo "==> Montando estrutura do ISO..."
 sudo rm -rf "$ISO_ROOT"
 sudo mkdir -p "$ISO_ROOT"/{live,boot/grub}
 
-sudo cp "$OUTPUT/filesystem.squashfs"    "$ISO_ROOT/live/"
-sudo cp "$ROOTFS/boot"/vmlinuz-*         "$ISO_ROOT/boot/vmlinuz"
-sudo cp "$ROOTFS/boot"/initrd.img-*      "$ISO_ROOT/boot/initrd.img"
+sudo cp "$OUTPUT/filesystem.squashfs" "$ISO_ROOT/live/"
+sudo cp "$ROOTFS/boot"/vmlinuz-*      "$ISO_ROOT/boot/vmlinuz"
+sudo cp "$ROOTFS/boot"/initrd.img-*   "$ISO_ROOT/boot/initrd.img"
 
-sudo tee "$ISO_ROOT/boot/grub/grub.cfg" > /dev/null << 'EOF'
+sudo tee "$ISO_ROOT/boot/grub/grub.cfg" > /dev/null << 'GRUB'
 set default=0
 set timeout=5
 
@@ -61,16 +58,11 @@ menuentry "LakeOS (modo seguro)" {
     linux  /boot/vmlinuz boot=live nomodeset
     initrd /boot/initrd.img
 }
-EOF
+GRUB
 
 echo "==> Gerando ISO bootável..."
 sudo grub-mkrescue -o "$OUTPUT/$ISO_NAME" "$ISO_ROOT" -- -volid "LAKEOS"
 
-echo "==> Fazendo upload no Gofile (pasta j3q)..."
-RESPONSE=$(curl -s -F "file=@$OUTPUT/$ISO_NAME" "https://upload.gofile.io/uploadfile?folderId=j3q")
-echo "Response: $RESPONSE"
-LINK=$(echo "$RESPONSE" | jq -r '.data.downloadPage')
-echo "================================================"
-echo "DOWNLOAD LINK: $LINK"
-echo "================================================"
-echo "==> Concluído!"
+echo "==> ISO gerado:"
+ls -lh "$OUTPUT/$ISO_NAME"
+echo "==> Build concluído!"
