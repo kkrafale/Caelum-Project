@@ -52,6 +52,14 @@ ID_LIKE=debian
 PRETTY_NAME="LakeOS 1.0"
 HOME_URL="https://github.com/seu-usuario/lakeOS"
 EOF
+# Força SDDM no live boot
+mkdir -p /etc/systemd/system/display-manager.service.d
+cat > /etc/systemd/system/display-manager.service.d/override.conf << 'EOF'
+[Service]
+ExecStartPre=/bin/sleep 5
+EOF
+
+systemctl set-default graphical.target
 
 echo "==> Limpando..."
 apt-get clean
