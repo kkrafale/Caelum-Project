@@ -82,3 +82,80 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for commit m
 ---
 
 ## 🏗️ Project Structure
+lakeos/
+
+├── scripts/         # Build and setup automation scripts
+
+├── configs/         # Default configs for DE and system tools
+
+├── patches/         # Patches applied on top of the Debian base
+
+├── docs/            # Project documentation
+
+└── README.md        # You are here
+
+> Structure will evolve as the project grows.
+
+---
+
+## 🧰 Building LakeOS
+
+> ⚠️ Build instructions are a work in progress. This section will be updated as the build process stabilizes.
+
+For now, the general flow is:
+
+```bash
+# Clone the repo
+git clone https://github.com/kkrafale/Caelum-Project.git
+cd Caelum-Project
+
+# Run the base setup script (Debian base + DE configuration)
+sudo bash scripts/setup-base.sh
+```
+
+Detailed build documentation will live in [`docs/building.md`](docs/building.md).
+
+---
+
+## 📋 Requirements
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| CPU | x86-64 dual-core | x86-64 quad-core or better |
+| RAM | 2 GB | 4 GB+ |
+| Storage | 15 GB | 30 GB+ |
+| Architecture | amd64 | amd64 |
+
+---
+
+## 🛣️ Roadmap
+
+- [x] Project kickoff
+- [x] Debian base selected
+- [ ] First bootable build
+- [ ] Desktop Environment integrated and configured
+- [ ] Custom live ISO
+- [ ] Public alpha release
+- [ ] Installer with GUI
+- [ ] Official website
+- [ ] First stable release
+
+---
+
+## 📜 License
+
+LakeOS is distributed under the **MIT License**. See [`LICENSE`](LICENSE) for the full text.
+
+The Debian base and bundled packages retain their own respective licenses.
+
+---
+
+## 👥 Team
+
+LakeOS is built by **Caelum** — a small team of passionate Linux enthusiasts. Want to join? Open an issue or reach out — we'd love to have you.
+
+---
+
+<div align="center">
+  <sub>Made with ❤️ and too many late nights — Caelum Team</sub>
+</div>
