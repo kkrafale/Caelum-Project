@@ -4,10 +4,10 @@ export DEBIAN_FRONTEND=noninteractive
 
 echo "lakeos" > /etc/hostname
 
-cat > /etc/hosts << 'EOF'
+cat > /etc/hosts << 'HOSTS'
 127.0.0.1   localhost
 127.0.1.1   lakeos
-EOF
+HOSTS
 
 apt-get update
 
@@ -41,23 +41,33 @@ systemctl enable NetworkManager
 echo "==> Criando usuário lake..."
 useradd -m -s /bin/bash lake
 echo "lake:lake" | chpasswd
+passwd -u lake
 usermod -aG sudo,audio,video,plugdev lake
 
 echo "==> Identidade do sistema..."
-cat > /etc/os-release << 'EOF'
+cat > /etc/os-release << 'OSRELEASE'
 NAME="LakeOS"
 VERSION="1.0"
 ID=lakeos
 ID_LIKE=debian
 PRETTY_NAME="LakeOS 1.0"
 HOME_URL="https://github.com/seu-usuario/lakeOS"
-EOF
-# Força SDDM no live boot
+OSRELEASE
+
+echo "==> Configurando autologin SDDM..."
+mkdir -p /etc/sddm.conf.d
+cat > /etc/sddm.conf.d/autologin.conf << 'SDDM'
+[Autologin]
+User=lake
+Session=plasma
+SDDM
+
+echo "==> Forçando SDDM no live boot..."
 mkdir -p /etc/systemd/system/display-manager.service.d
-cat > /etc/systemd/system/display-manager.service.d/override.conf << 'EOF'
+cat > /etc/systemd/system/display-manager.service.d/override.conf << 'OVERRIDE'
 [Service]
 ExecStartPre=/bin/sleep 5
-EOF
+OVERRIDE
 
 systemctl set-default graphical.target
 
