@@ -1,0 +1,6 @@
+NAME="LakeOS"
+VERSION="0.1"
+ID=lakeos
+ID_LIKE=debian
+PRETTY_NAME="LakeOS 0.1 (Bookworm)"
+HOME_URL="https://github.com/kkrafale/Caelum-Project"

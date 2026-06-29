@@ -1,0 +1,40 @@
+name: Build LakeOS ISO
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar dependências
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            debootstrap \
+            squashfs-tools \
+            xorriso \
+            grub-pc-bin \
+            grub-efi-amd64-bin \
+            mtools \
+            dosfstools \
+            jq
+
+      - name: Build LakeOS
+        run: sudo bash scripts/build.sh
+
+      - name: Upload pro Gofile
+        run: |
+          RESPONSE=$(curl -s -F "file=@output/lakeOS.iso" "https://upload.gofile.io/uploadfile?folderId=j3q")
+          echo "Response: $RESPONSE"
+          LINK=$(echo $RESPONSE | jq -r '.data.downloadPage')
+          echo "================================================"
+          echo "DOWNLOAD LINK: $LINK"
+          echo "================================================"
