@@ -66,11 +66,11 @@ echo "==> Forçando SDDM no live boot..."
 mkdir -p /etc/systemd/system/display-manager.service.d
 cat > /etc/systemd/system/display-manager.service.d/override.conf << 'OVERRIDE'
 [Service]
-ExecStartPre=/bin/sleep 5
+ExecStartPre=/bin/sleep 10
 OVERRIDE
 
 systemctl set-default graphical.target
-
+systemctl mask live-config.service || true
 echo "==> Limpando..."
 apt-get clean
 apt-get autoremove -y
