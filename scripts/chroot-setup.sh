@@ -1,27 +1,60 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 export DEBIAN_FRONTEND=noninteractive
 
 echo "lakeos" > /etc/hostname
 
+cat > /etc/hosts << 'EOF'
+127.0.0.1   localhost
+127.0.1.1   lakeos
+EOF
+
 apt-get update
-apt-get install -y sudo curl wget git nano network-manager live-boot live-config
 
-# KDE Plasma
+echo "==> Instalando base + live system..."
 apt-get install -y \
-  kde-plasma-desktop \
-  sddm \
-  konsole \
-  dolphin \
-  plasma-nm
+    sudo curl wget git nano \
+    network-manager \
+    linux-image-amd64 \
+    live-boot \
+    live-boot-initramfs-tools \
+    live-config \
+    live-config-systemd \
+    systemd-sysv \
+    dbus
 
+echo "==> Instalando KDE Plasma..."
+apt-get install -y \
+    kde-plasma-desktop \
+    sddm \
+    konsole \
+    dolphin \
+    plasma-nm \
+    kde-spectacle \
+    gwenview \
+    okular
+
+echo "==> Configurando SDDM..."
 systemctl enable sddm
+systemctl enable NetworkManager
 
-# Usuário padrão
+echo "==> Criando usuário lake..."
 useradd -m -s /bin/bash lake
 echo "lake:lake" | chpasswd
-usermod -aG sudo lake
+usermod -aG sudo,audio,video,plugdev lake
 
+echo "==> Identidade do sistema..."
+cat > /etc/os-release << 'EOF'
+NAME="LakeOS"
+VERSION="1.0"
+ID=lakeos
+ID_LIKE=debian
+PRETTY_NAME="LakeOS 1.0"
+HOME_URL="https://github.com/seu-usuario/lakeOS"
+EOF
+
+echo "==> Limpando..."
 apt-get clean
+apt-get autoremove -y
+rm -rf /var/lib/apt/lists/*
 rm -f /tmp/chroot-setup.sh

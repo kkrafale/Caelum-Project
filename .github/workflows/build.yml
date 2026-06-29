@@ -23,18 +23,11 @@ jobs:
             xorriso \
             grub-pc-bin \
             grub-efi-amd64-bin \
+            grub-common \
             mtools \
             dosfstools \
-            jq
+            jq \
+            curl
 
-      - name: Build LakeOS
+      - name: Build e Upload LakeOS
         run: sudo bash scripts/build.sh
-
-      - name: Upload pro Gofile
-        run: |
-          RESPONSE=$(curl -s -F "file=@output/lakeOS.iso" "https://upload.gofile.io/uploadfile?folderId=j3q")
-          echo "Response: $RESPONSE"
-          LINK=$(echo $RESPONSE | jq -r '.data.downloadPage')
-          echo "================================================"
-          echo "DOWNLOAD LINK: $LINK"
-          echo "================================================"
