@@ -20,6 +20,8 @@ sudo cp config/os-release        "$ROOTFS/etc/os-release"
 sudo cp config/packages.list     "$ROOTFS/tmp/packages.list"
 sudo cp scripts/chroot-setup.sh  "$ROOTFS/tmp/chroot-setup.sh"
 sudo chmod +x "$ROOTFS/tmp/chroot-setup.sh"
+sudo cp assets/lakeos-circle.png "$ROOTFS/tmp/lakeos-circle.png"
+sudo cp assets/lakeos-white.png  "$ROOTFS/tmp/lakeos-white.png"
 
 echo "==> Montando filesystems virtuais..."
 sudo mount --bind /proc    "$ROOTFS/proc"

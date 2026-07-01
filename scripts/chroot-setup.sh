@@ -51,7 +51,7 @@ VERSION="1.0"
 ID=lakeos
 ID_LIKE=debian
 PRETTY_NAME="LakeOS 1.0"
-HOME_URL="https://github.com/seu-usuario/lakeOS"
+HOME_URL="https://github.com/kkrafale/lakeOS"
 OSRELEASE
 
 echo "==> Configurando autologin SDDM..."
