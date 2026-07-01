@@ -77,6 +77,24 @@ deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
 deb http://security.debian.org/debian-security trixie-security main
 deb http://deb.debian.org/debian trixie-updates main
 EOF
+mkdir -p /usr/share/pixmaps
+cp /tmp/lakeos-circle.png /usr/share/pixmaps/lakeos.png
+cp /tmp/lakeos-white.png /usr/share/pixmaps/lakeos-menu.png
+mkdir -p /home/lake/.config/fastfetch
+cat > /home/lake/.config/fastfetch/config.jsonc << 'EOF'
+{
+    "logo": {
+        "source": "/usr/share/pixmaps/lakeos.png",
+        "type": "kitty",
+        "width": 20,
+        "height": 10
+    }
+}
+EOF
+chown -R lake:lake /home/lake/.config
+mkdir -p /usr/share/icons/hicolor/256x256/apps
+cp /usr/share/pixmaps/lakeos-menu.png /usr/share/icons/hicolor/256x256/apps/lakeos-white.png
+gtk-update-icon-cache /usr/share/icons/hicolor/ || true
 echo "==> Limpando..."
 apt-get clean
 apt-get autoremove -y
