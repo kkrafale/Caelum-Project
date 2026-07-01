@@ -98,11 +98,31 @@ cat > /home/lake/.config/fastfetch/config.jsonc << 'FASTFETCH'
     "logo": {
         "source": "/usr/share/ascii/lakeos-fastfetch.txt",
         "type": "file"
-    }
+    },
+    "modules": [
+        "title",
+        "separator",
+        "os",
+        "host",
+        "kernel",
+        "uptime",
+        "packages",
+        "shell",
+        "display",
+        "de",
+        "wm",
+        "terminal",
+        "cpu",
+        "gpu",
+        "memory",
+        "disk",
+        "localip",
+        "locale"
+    ]
 }
 FASTFETCH
 mkdir -p /usr/share/ascii
-cp /tmp/lakeos-fastfetch.txt /usr/share/ascii/lakeos.txt
+cp /tmp/lakeos-fastfetch.txt /usr/share/ascii/lakeos-fastfetch.txt
 echo "==> Limpando..."
 apt-get clean
 apt-get autoremove -y
