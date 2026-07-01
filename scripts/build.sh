@@ -22,7 +22,7 @@ sudo cp scripts/chroot-setup.sh  "$ROOTFS/tmp/chroot-setup.sh"
 sudo chmod +x "$ROOTFS/tmp/chroot-setup.sh"
 sudo cp assets/lakeos-circle.png "$ROOTFS/tmp/lakeos-circle.png"
 sudo cp assets/lakeos-white.png  "$ROOTFS/tmp/lakeos-white.png"
-
+sudo cp assets/ascii-art.txt     "$ROOTFS/tmp/ascii-art.txt"
 echo "==> Montando filesystems virtuais..."
 sudo mount --bind /proc    "$ROOTFS/proc"
 sudo mount --bind /sys     "$ROOTFS/sys"

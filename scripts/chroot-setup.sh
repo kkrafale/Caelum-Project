@@ -96,13 +96,11 @@ mkdir -p /home/lake/.config/fastfetch
 cat > /home/lake/.config/fastfetch/config.jsonc << 'FASTFETCH'
 {
     "logo": {
-        "source": "/usr/share/pixmaps/lakeos.png",
-        "type": "auto"
+        "source": "/usr/share/ascii/lakeos-fastfetch.txt",
+        "type": "file"
     }
 }
 FASTFETCH
-
-chown -R lake:lake /home/lake/.config
 
 echo "==> Limpando..."
 apt-get clean
