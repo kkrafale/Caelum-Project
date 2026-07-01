@@ -21,7 +21,8 @@ apt-get install -y \
     live-config \
     live-config-systemd \
     systemd-sysv \
-    dbus
+    dbus \
+    fastfetch
 
 echo "==> Instalando KDE Plasma..."
 apt-get install -y \
@@ -43,6 +44,8 @@ useradd -m -s /bin/bash lake
 echo "lake:lake" | chpasswd
 passwd -u lake
 usermod -aG sudo,audio,video,plugdev lake
+
+echo "fastfetch" >> /home/lake/.bashrc
 
 echo "==> Identidade do sistema..."
 cat > /etc/os-release << 'OSRELEASE'
@@ -71,30 +74,36 @@ OVERRIDE
 
 systemctl set-default graphical.target
 systemctl mask live-config.service || true
-# Garante sources.list correto no sistema live
-cat > /etc/apt/sources.list << 'EOF'
+
+echo "==> Garantindo sources.list correto..."
+cat > /etc/apt/sources.list << 'SOURCES'
 deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
 deb http://security.debian.org/debian-security trixie-security main
 deb http://deb.debian.org/debian trixie-updates main
-EOF
+SOURCES
+
+echo "==> Configurando logos..."
 mkdir -p /usr/share/pixmaps
 cp /tmp/lakeos-circle.png /usr/share/pixmaps/lakeos.png
-cp /tmp/lakeos-white.png /usr/share/pixmaps/lakeos-menu.png
+cp /tmp/lakeos-white.png  /usr/share/pixmaps/lakeos-menu.png
+ln -sf /usr/share/pixmaps/lakeos.png /usr/share/pixmaps/debian-logo.png
+
+mkdir -p /usr/share/icons/hicolor/256x256/apps
+cp /usr/share/pixmaps/lakeos-menu.png /usr/share/icons/hicolor/256x256/apps/lakeos.png
+gtk-update-icon-cache /usr/share/icons/hicolor/ || true
+
 mkdir -p /home/lake/.config/fastfetch
-cat > /home/lake/.config/fastfetch/config.jsonc << 'EOF'
+cat > /home/lake/.config/fastfetch/config.jsonc << 'FASTFETCH'
 {
     "logo": {
         "source": "/usr/share/pixmaps/lakeos.png",
-        "type": "kitty",
-        "width": 20,
-        "height": 10
+        "type": "auto"
     }
 }
-EOF
+FASTFETCH
+
 chown -R lake:lake /home/lake/.config
-mkdir -p /usr/share/icons/hicolor/256x256/apps
-cp /usr/share/pixmaps/lakeos-menu.png /usr/share/icons/hicolor/256x256/apps/lakeos-white.png
-gtk-update-icon-cache /usr/share/icons/hicolor/ || true
+
 echo "==> Limpando..."
 apt-get clean
 apt-get autoremove -y
